@@ -1,11 +1,44 @@
 def carica_da_file(file_path):
     """Carica i libri dal file"""
-    # TODO
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            # prendo il file, lo leggo, tolgo \n a fine di ogni riga, e divido il file in righe
+            righe = file.read().strip().splitlines()
+
+    except FileNotFoundError:
+        return None
+
+    if not righe:
+        return None      # nel caso non trovassi righe nel file
+
+    # creare e popolare una struttura dati che rappresenta la biblioteca distribuendo i libri presenti nel file nelle sezioni corrette
+    biblioteca = []
+
+    numero_sezioni = int(righe[0])  # considero la prima riga che mi indica il numero di sezioni
+
+    biblioteca = [[] for i in range(numero_sezioni)] # lista di 5 (numero delle mie sezioni) liste
+
+    for riga in righe[1:]: # sennò parto da riga 0 e mi legge solo 5
+        # print(riga)  (avevo fatto un controllo)
+        titolo, autore, anno, pagine, sezione = riga.strip().split(",")
+        anno = int(anno)
+        pagine = int(pagine)
+        sezione = int(sezione)
+        if sezione < 1:
+            continue
+        libro = {"titolo": titolo, "autore": autore, "anno": anno, "pagine": pagine, "sezione": sezione}  # potrei eliminare il campo sezione perchè lo considero dopo (è ridondante)
+        biblioteca[numero_sezioni-1].append(libro)
+    # print(biblioteca) (avevo fatto un controllo, stampo una lista di dizionari)
+    return biblioteca
+
 
 
 def aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path):
     """Aggiunge un libro nella biblioteca"""
-    # TODO
+    nuovo_libro = {"titolo": titolo, "autore": autore, "anno": anno, "pagine": pagine, "sezione": sezione }
+    biblioteca.append(nuovo_libro)
+    print(biblioteca)
+
 
 
 def cerca_libro(biblioteca, titolo):
@@ -21,6 +54,7 @@ def elenco_libri_sezione_per_titolo(biblioteca, sezione):
 def main():
     biblioteca = []
     file_path = "biblioteca.csv"
+
 
     while True:
         print("\n--- MENU BIBLIOTECA ---")
